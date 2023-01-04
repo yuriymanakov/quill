@@ -16,6 +16,7 @@
   "workspaces": [
     "website"
   ],
+  "private": true,
   "dependencies": {
     "eventemitter3": "^4.0.7",
     "lodash.clonedeep": "^4.5.0",
@@ -62,7 +63,8 @@
     "typescript": "^4.8.3",
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.11.1"
+    "webpack-dev-server": "^4.11.1",
+    "rimraf": "3.0.2"
   },
   "license": "BSD-3-Clause",
   "repository": {
@@ -75,12 +77,13 @@
   "prettier": {
     "singleQuote": true,
     "trailingComma": "all",
-    "arrowParens": "avoid"
+    "arrowParens": "avoid",
+    "endOfLine": "auto"
   },
   "scripts": {
     "build": "npm run lint && npm run build:typescript && npm run build:webpack",
     "build:typescript": "tsc",
-    "build:webpack": "webpack --config _develop/webpack.config.js; rm dist/quill.core dist/quill.bubble dist/quill.snow",
+    "build:webpack": "webpack --config _develop/webpack.config.js && rimraf dist/quill.core dist/quill.bubble dist/quill.snow",
     "build:release": "./_develop/scripts/release.sh",
     "develop": "npm run start",
     "lint": "npm run lint:eslint && npm run lint:tsc",
@@ -95,13 +98,13 @@
     "website:build": "npm run build -w website",
     "website:serve": "npm run serve -w website -- --port $npm_package_config_ports_gatsby",
     "website:develop": "npm run develop -w website -- --port $npm_package_config_ports_gatsby",
-    "test": "npm run test:unit; npm run test:random",
-    "test:all": "npm run test:unit; npm run test:functional; npm run test:random",
+    "test": "npm run test:unit && npm run test:random",
+    "test:all": "npm run test:unit && npm run test:functional && npm run test:random",
     "test:e2e": "npx playwright test",
     "test:unit": "npm run build; karma start _develop/karma.config.js",
     "test:unit:ci": "npm run build; karma start _develop/karma.config.js --reporters dots,saucelabs",
     "test:random": "ts-node --preferTsExts -O '{\"module\":\"commonjs\"}' ./node_modules/.bin/jasmine test/random.ts",
-    "test:coverage": "webpack --env.coverage --config _develop/webpack.config.js; karma start _develop/karma.config.js --reporters coverage"
+    "test:coverage": "webpack --env.coverage --config _develop/webpack.config.js && karma start _develop/karma.config.js --reporters coverage"
   },
   "keywords": [
     "editor",
